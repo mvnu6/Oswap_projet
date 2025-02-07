@@ -1,63 +1,54 @@
--- -- Supprimer la table utilisateurs si elle existe
--- DROP TABLE IF EXISTS users CASCADE;
--- CREATE TABLE IF NOT EXISTS users (
---     id_user SERIAL PRIMARY KEY,
---     username VARCHAR(50) NOT NULL,
---     email VARCHAR(150) UNIQUE NOT NULL,
---     password VARCHAR(255) NOT NULL
--- );
 
--- -- Supprimer la table category si elle existe
--- DROP TABLE IF EXISTS category CASCADE;
--- CREATE TABLE IF NOT EXISTS category (
---     id_category SERIAL PRIMARY KEY,
---     name_category VARCHAR(50) NOT NULL
--- );
-
--- -- Supprimer la table Games si elle existe
--- DROP TABLE IF EXISTS Games CASCADE;
--- CREATE TABLE IF NOT EXISTS Games (
---     id_game SERIAL PRIMARY KEY,
---     name VARCHAR(100) NOT NULL,
---     description TEXT,
---     id_category INT,
---     game_path VARCHAR(255),
---     image_path VARCHAR(255),
---     FOREIGN KEY (id_category) REFERENCES category(id_category) ON DELETE CASCADE
--- );
-
--- -- Supprimer la table avis si elle existe
--- DROP TABLE IF EXISTS review CASCADE;
--- CREATE TABLE IF NOT EXISTS review (
---     id_review SERIAL PRIMARY KEY,
---     id_user INT,
---     id_game INT,
---     note INT CHECK (note BETWEEN 1 AND 5),
---     comment TEXT,
---     FOREIGN KEY (id_user) REFERENCES users(id_user) ON DELETE CASCADE,
---     FOREIGN KEY (id_game) REFERENCES Games(id_game) ON DELETE CASCADE
--- );
-
--- -- Supprimer la table subscription si elle existe
--- DROP TABLE IF EXISTS subscription CASCADE;
--- CREATE TABLE IF NOT EXISTS subscription (
---     id_subscription SERIAL PRIMARY KEY,
---     name_sub VARCHAR(50) NOT NULL,
---     price DECIMAL(10,2) NOT NULL,   
---     time INT NOT NULL, -- in days
---     id_game INT,
---     FOREIGN KEY (id_game) REFERENCES Games(id_game) ON DELETE CASCADE
--- );
+DROP TABLE IF EXISTS users CASCADE;
+CREATE TABLE IF NOT EXISTS users (
+    id_user SERIAL PRIMARY KEY,
+    username VARCHAR(50) NOT NULL,
+    email VARCHAR(150) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL
+);
 
 
--- INSERT INTO category (name_category) VALUES
--- ('Action'),
--- ('Adventure'),
--- ('Puzzle');
--- INSERT INTO Games (name, description, id_category, image_path, game_path)
--- VALUES 
--- ('Motus', 'A fun game', 1, '/images/motus1.png', '/games/motus'),
--- ('Quiz', 'An adventure game', 2, '/images/quiz1.jpg', '/games/quiz'),
--- ('Memory Game', 'An adventure game', 2, '/images/cardmemory3.png', '/games/memory')
+DROP TABLE IF EXISTS category CASCADE;
+CREATE TABLE IF NOT EXISTS category (
+    id_category SERIAL PRIMARY KEY,
+    name_category VARCHAR(50) NOT NULL,
+    description_category VARCHAR(255) NOT NULL,
+    image_category VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
 
--- ALTER TABLE users ADD COLUMN profile_picture VARCHAR(255);
+
+DROP TABLE IF EXISTS brand  CASCADE;
+CREATE TABLE IF NOT EXISTS brand  (
+    id_brand SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+
+DROP TABLE IF EXISTS product CASCADE;
+CREATE TABLE IF NOT EXISTS product (
+    id_product SERIAL PRIMARY KEY,
+    name_product VARCHAR(100) NOT NULL,
+    description_product TEXT NULL,
+    price_product DECIMAL(10,2) NOT NULL,
+    image_product VARCHAR(255) NOT NULL,
+    id_brand INT,
+    id_category INT,
+    id_type INT,
+    FOREIGN KEY (id_brand) REFERENCES brand(id_brand) ON DELETE CASCADE,
+    FOREIGN KEY (id_category) REFERENCES category(id_category) ON DELETE CASCADE
+    FOREIGN KEY (id_type) REFERENCES type(id_type) ON DELETE CASCADE
+);
+
+
+DROP TABLE IF EXISTS type CASCADE;
+CREATE TABLE IF NOT EXISTS type (
+    id_type SERIAL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'La date de création de la catégorie',  
+    updated_at TIMESTAMP NULL COMMENT 'La date de la dernière mise à jour de la catégorie',
+);
+
